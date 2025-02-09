@@ -10,7 +10,7 @@ body {
     margin: 0;
 }
 
-a {
+a, a:visited {
     font-color:#676df6;
     font-weight:400;
 }
