@@ -3,35 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accessible Color Palette Generator</title>
+    <title>epaintjob</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Accessible Color Palette Generator</h1>
+        <h1>epaintjob</h1>
 
-        <label for="baseColor">Pick a Base Color:</label>
+        <label for="baseColor">base color:</label>
         <input type="color" id="baseColorPicker">
         <input type="text" id="baseColor" placeholder="#3498db">
 
-        <label for="extraColor1">Optional Color 1:</label>
+        <label for="extraColor1">color 2:</label>
         <input type="color" id="extraColor1Picker">
-        <input type="text" id="extraColor1" placeholder="(Optional)">
+        <input type="text" id="extraColor1" placeholder="optional">
 
-        <label for="extraColor2">Optional Color 2:</label>
+        <label for="extraColor2">color 3:</label>
         <input type="color" id="extraColor2Picker">
-        <input type="text" id="extraColor2" placeholder="(Optional)">
+        <input type="text" id="extraColor2" placeholder="optional">
 
-        <button id="generate">Generate Palette</button>
+        <button id="generate">generate palette</button>
 
-        <h2>Suggested Background Color:</h2>
+        <h2>suggested bg:</h2>
         <div id="bgColorPreview">Click Generate</div>
 
-        <h2>Accessible Color Palette:</h2>
+        <h2>your palette:</h2>
         <div id="palette"></div>
     </div>
 
     <script src="colors.js"></script>
     <script src="script.js"></script>
+
+    <span style="font-size:50%">epaintjob is a 100% free-of-tracking and static color palette generator that anyone can host. <a href="https://gitz.blitzw.in/nune/epaintjob">source code!</a></span>
 </body>
 </html>
