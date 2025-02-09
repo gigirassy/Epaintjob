@@ -10,7 +10,7 @@ function hexToRgb(hex) {
 
 // Calculate relative luminance
 function luminance(r, g, b) {
-    let a = [r, g, b].map(function (v) {
+    let a = [r, g, b].map(v => {
         v /= 255;
         return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
     });
@@ -31,4 +31,9 @@ function generateAccessibleColor(baseColor) {
         newColor = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
     } while (contrastRatio(baseColor, newColor) < 4.5);
     return newColor;
+}
+
+// Find a good background color with sufficient contrast
+function getRecommendedBackgroundColor(textColor) {
+    return contrastRatio(textColor, "#ffffff") >= 4.5 ? "#ffffff" : "#333333";
 }
