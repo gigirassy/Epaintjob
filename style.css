@@ -1,17 +1,19 @@
+
 body {
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f4f4f4;
+    background-color: #121212;  /* Dark background */
+    color: #e0e0e0;  /* Light text */
     margin: 0;
 }
 
 .container {
-    background: white;
+    background: #333333;  /* Dark background for the container */
     padding: 20px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);  /* Light shadow */
     border-radius: 8px;
     text-align: center;
     width: 90%;
@@ -23,6 +25,15 @@ input, button {
     padding: 10px;
     font-size: 16px;
     width: 100%;
+    background-color: #444444;  /* Dark background for inputs/buttons */
+    color: #e0e0e0;  /* Light text in inputs/buttons */
+    border: none;
+    border-radius: 5px;
+}
+
+input:focus, button:focus {
+    outline: none;
+    border: 2px solid #6200ea;  /* Highlight border on focus */
 }
 
 #palette {
@@ -52,4 +63,6 @@ input, button {
     line-height: 50px;
     text-align: center;
     border-radius: 5px;
+    background-color: #444444;  /* Dark background for the preview */
+    color: #e0e0e0;  /* Light text for the preview */
 }
