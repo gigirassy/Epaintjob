@@ -9,11 +9,28 @@
 <body>
     <div class="container">
         <h1>Accessible Color Palette Generator</h1>
-        <label for="baseColor">Enter a Base Color (HEX):</label>
+
+        <label for="baseColor">Pick a Base Color:</label>
+        <input type="color" id="baseColorPicker">
         <input type="text" id="baseColor" placeholder="#3498db">
+
+        <label for="extraColor1">Optional Color 1:</label>
+        <input type="color" id="extraColor1Picker">
+        <input type="text" id="extraColor1" placeholder="(Optional)">
+
+        <label for="extraColor2">Optional Color 2:</label>
+        <input type="color" id="extraColor2Picker">
+        <input type="text" id="extraColor2" placeholder="(Optional)">
+
         <button id="generate">Generate Palette</button>
+
+        <h2>Suggested Background Color:</h2>
+        <div id="bgColorPreview">Click Generate</div>
+
+        <h2>Accessible Color Palette:</h2>
         <div id="palette"></div>
     </div>
+
     <script src="colors.js"></script>
     <script src="script.js"></script>
 </body>
