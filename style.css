@@ -10,6 +10,11 @@ body {
     margin: 0;
 }
 
+a {
+    font-color:#676df6;
+    font-weight:400;
+}
+
 .container {
     background: #333333;  /* Dark background for the container */
     padding: 20px;
