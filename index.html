@@ -7,6 +7,12 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="sidebar">
+        <h2>saved palettes</h2>
+        <div id="savedPalettes"></div>
+        <button id="clearPalettes">clear!</button>
+    </div>
+
     <div class="container">
         <h1>epaintjob</h1>
 
@@ -29,11 +35,15 @@
 
         <h2>your palette:</h2>
         <div id="palette"></div>
+        <h2>generate from image:</h2>
+        <input type="file" id="imageInput" accept="image/*">
+        <canvas id="imageCanvas"></canvas>
 
         <p><span style="font-size:90%">epaintjob is a 100% free-of-tracking and static color palette generator that anyone can host. <a href="https://gitz.blitzw.in/nune/epaintjob">source code! >:]</a></span></p>
     </div>
 
     <script src="colors.js"></script>
     <script src="script.js"></script>
+    <script src="extract.js"></script>
 </body>
 </html>
