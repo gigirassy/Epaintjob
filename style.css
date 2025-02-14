@@ -25,6 +25,36 @@ a, a:visited {
     max-width: 500px;
 }
 
+.sidebar {
+    width: 200px;
+    background: #333;
+    color: white;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.sidebar h2 {
+    text-align: center;
+}
+
+#savedPalettes {
+    display: flex;
+    flex-direction: column;
+}
+
+.saved-palette {
+    display: flex;
+    margin: 5px 0;
+    padding: 5px;
+    background: #555;
+    cursor: pointer;
+}
+
+.saved-palette div {
+    flex-grow: 1;
+    text-align: center;
+}
+
 input, button {
     margin-top: 10px;
     padding: 10px;
@@ -70,4 +100,8 @@ input:focus, button:focus {
     border-radius: 5px;
     background-color: #444444;  /* Dark background for the preview */
     color: #e0e0e0;  /* Light text for the preview */
+}
+
+#imageCanvas {
+    display: none;
 }
