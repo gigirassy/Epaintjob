@@ -7,33 +7,72 @@ document.addEventListener("DOMContentLoaded", function () {
     let clearPalettesButton = document.getElementById('clearPalettes');
     let generateButton = document.getElementById('generate');
     let paletteDiv = document.getElementById('palette');
-    let baseColorInput = document.getElementById('baseColor');
+    let bgColorPreview = document.getElementById('bgColorPreview');
+    let imageInput = document.getElementById('imageInput');
 
-    if (!savePaletteButton || !clearPalettesButton || !generateButton || !paletteDiv || !baseColorInput) {
+    // Check if critical elements exist
+    if (!savePaletteButton || !clearPalettesButton || !generateButton || !paletteDiv || !bgColorPreview) {
         console.error("❌ One or more elements are missing!");
-        return; // Stop execution if elements are missing
+        return;
     }
 
-    // Generate palette event
-    generateButton.addEventListener('click', function () {
-        console.log("🔹 Generate button clicked!");
+    // Sync color pickers with text inputs
+    function syncColorPicker(pickerId, textId) {
+        let colorPicker = document.getElementById(pickerId);
+        let textInput = document.getElementById(textId);
 
-        let baseColor = baseColorInput.value.trim();
-        console.log("🎨 Base color selected:", baseColor);
-
-        if (!isValidHex(baseColor)) {
-            console.error("❌ Invalid hex color:", baseColor);
+        if (!colorPicker || !textInput) {
+            console.error(`❌ Missing elements: ${pickerId} or ${textId}`);
             return;
         }
 
-        let colors = [baseColor];
+        // When user picks a color, update text field
+        colorPicker.addEventListener("input", function () {
+            textInput.value = colorPicker.value;
+        });
+
+        // When user types a valid hex, update color picker
+        textInput.addEventListener("input", function () {
+            if (isValidHex(textInput.value)) {
+                colorPicker.value = textInput.value;
+            }
+        });
+    }
+
+    // Validate hex color
+    function isValidHex(hex) {
+        return /^#([0-9A-F]{3}){1,2}$/i.test(hex);
+    }
+
+    // Sync all color pickers
+    syncColorPicker("baseColorPicker", "baseColor");
+    syncColorPicker("extraColor1Picker", "extraColor1");
+    syncColorPicker("extraColor2Picker", "extraColor2");
+
+    // Generate an accessible color palette
+    generateButton.addEventListener('click', function () {
+        console.log("🔹 Generate button clicked!");
+
+        let baseColor = document.getElementById('baseColor').value.trim();
+        let extraColor1 = document.getElementById('extraColor1').value.trim();
+        let extraColor2 = document.getElementById('extraColor2').value.trim();
+        let colors = [];
+
+        if (isValidHex(baseColor)) colors.push(baseColor);
+        if (isValidHex(extraColor1)) colors.push(extraColor1);
+        if (isValidHex(extraColor2)) colors.push(extraColor2);
+
         while (colors.length < 5) {
-            let newColor = generateAccessibleColor(baseColor);
-            console.log("✅ Generated color:", newColor);
+            let newColor = generateAccessibleColor(colors[0] || "#3498db"); // Use base color or fallback
             colors.push(newColor);
         }
 
-        // Render the new palette
+        // Set recommended background color
+        let bgColor = getRecommendedBackgroundColor(colors);
+        bgColorPreview.style.backgroundColor = bgColor;
+        bgColorPreview.textContent = bgColor;
+
+        // Render the palette
         paletteDiv.innerHTML = '';
         colors.forEach(color => {
             let colorBox = document.createElement('div');
@@ -46,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("✅ Palette generated successfully.");
     });
 
-    // Save palette event
+    // Save the current palette to localStorage
     savePaletteButton.addEventListener('click', function () {
         let colors = Array.from(document.querySelectorAll('.color-box')).map(el => el.textContent);
         if (colors.length === 0) return;
@@ -58,12 +97,13 @@ document.addEventListener("DOMContentLoaded", function () {
         loadSavedPalettes();
     });
 
-    // Clear palettes event
+    // Clear saved palettes
     clearPalettesButton.addEventListener('click', function () {
         localStorage.removeItem('palettes');
         loadSavedPalettes();
     });
 
+    // Load saved palettes from localStorage
     function loadSavedPalettes() {
         let savedPalettes = JSON.parse(localStorage.getItem('palettes')) || [];
         let savedPalettesDiv = document.getElementById('savedPalettes');
@@ -92,10 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    function isValidHex(hex) {
-        return /^#([0-9A-F]{3}){1,2}$/i.test(hex);
-    }
-
+    // Generate an accessible color (lighter/darker for contrast)
     function generateAccessibleColor(baseHex) {
         let baseRgb = hexToRgb(baseHex);
         let newRgb = {
@@ -104,6 +141,11 @@ document.addEventListener("DOMContentLoaded", function () {
             b: Math.min(baseRgb.b + 50, 255),
         };
         return rgbToHex(newRgb.r, newRgb.g, newRgb.b);
+    }
+
+    function getRecommendedBackgroundColor(colors) {
+        // Return black or white based on contrast
+        return "#ffffff"; // Placeholder (could use luminance check)
     }
 
     function hexToRgb(hex) {
@@ -117,5 +159,42 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function rgbToHex(r, g, b) {
         return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
+    // Extract colors from an uploaded image
+    imageInput.addEventListener("change", function (event) {
+        let file = event.target.files[0];
+        if (!file) return;
+
+        let reader = new FileReader();
+        reader.onload = function (e) {
+            let img = new Image();
+            img.src = e.target.result;
+            img.onload = function () {
+                let canvas = document.getElementById('imageCanvas');
+                let ctx = canvas.getContext('2d');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0, img.width, img.height);
+
+                let colors = extractColorsFromImage(ctx, img.width, img.height);
+                loadPalette(colors);
+            };
+        };
+        reader.readAsDataURL(file);
+    });
+
+    function extractColorsFromImage(ctx, width, height) {
+        let imageData = ctx.getImageData(0, 0, width, height).data;
+        let colors = new Set();
+
+        for (let i = 0; i < imageData.length; i += 4 * 50) {
+            let r = imageData[i], g = imageData[i + 1], b = imageData[i + 2];
+            let hex = rgbToHex(r, g, b);
+            colors.add(hex);
+            if (colors.size >= 5) break;
+        }
+
+        return Array.from(colors);
     }
 });
